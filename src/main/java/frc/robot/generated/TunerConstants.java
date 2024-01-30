@@ -27,7 +27,7 @@ public class TunerConstants {
         // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
         private static final Slot0Configs driveGains = new Slot0Configs()
                         .withKP(3).withKI(0).withKD(0)
-                        .withKS(0).withKV(0).withKA(0);
+                        .withKS(0.13).withKV(1.16).withKA(0.00715);
 
         // The closed-loop output type to use for the steer motors;
         // This affects the PID/FF gains for the steer motors
@@ -44,13 +44,15 @@ public class TunerConstants {
         // This needs to be tuned to your individual robot
         public static final double kSpeedAt12VoltsMps = 5.02;
 
+        public static final double kAutonomousMaxSpeedMps = 3.0;
+
         // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
         // This may need to be tuned to your individual robot
         private static final double kCoupleRatio = 3.5714285714285716;
 
         private static final double kDriveGearRatio = 6.746031746031747;
         private static final double kSteerGearRatio = 12.8;
-        private static final double kWheelRadiusInches = 3.9375;
+        private static final double kWheelRadiusInches = 3.9 / 2;
 
         private static final boolean kSteerMotorReversed = false;
         private static final boolean kInvertLeftSide = false;
@@ -84,15 +86,14 @@ public class TunerConstants {
                         .withDriveInertia(kDriveInertia)
                         .withSteerFrictionVoltage(kSteerFrictionVoltage)
                         .withDriveFrictionVoltage(kDriveFrictionVoltage)
-                        .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
+                        .withFeedbackSource(SteerFeedbackType.RemoteCANcoder)
                         .withCouplingGearRatio(kCoupleRatio)
                         .withSteerMotorInverted(kSteerMotorReversed);
-
         // Front Left
         private static final int kFrontLeftDriveMotorId = 1;
         private static final int kFrontLeftSteerMotorId = 3;
         private static final int kFrontLeftEncoderId = 2;
-        private static final double kFrontLeftEncoderOffset = 0.235595703125;
+        private static final double kFrontLeftEncoderOffset = -0.763916015625;
 
         private static final double kFrontLeftXPosInches = 11.5;
         private static final double kFrontLeftYPosInches = 11.5;
@@ -101,7 +102,7 @@ public class TunerConstants {
         private static final int kFrontRightDriveMotorId = 4;
         private static final int kFrontRightSteerMotorId = 6;
         private static final int kFrontRightEncoderId = 5;
-        private static final double kFrontRightEncoderOffset = -0.368896484375;
+        private static final double kFrontRightEncoderOffset = -0.36962890625;
 
         private static final double kFrontRightXPosInches = 11.5;
         private static final double kFrontRightYPosInches = -11.5;
@@ -110,7 +111,7 @@ public class TunerConstants {
         private static final int kBackLeftDriveMotorId = 7;
         private static final int kBackLeftSteerMotorId = 9;
         private static final int kBackLeftEncoderId = 8;
-        private static final double kBackLeftEncoderOffset = -0.35791015625;
+        private static final double kBackLeftEncoderOffset = -0.357421875;
 
         private static final double kBackLeftXPosInches = -11.5;
         private static final double kBackLeftYPosInches = 11.5;
@@ -119,7 +120,7 @@ public class TunerConstants {
         private static final int kBackRightDriveMotorId = 10;
         private static final int kBackRightSteerMotorId = 12;
         private static final int kBackRightEncoderId = 11;
-        private static final double kBackRightEncoderOffset = 0.432373046875;
+        private static final double kBackRightEncoderOffset = -0.5673828125;
 
         private static final double kBackRightXPosInches = -11.5;
         private static final double kBackRightYPosInches = -11.5;
@@ -146,7 +147,8 @@ public class TunerConstants {
                         4, new Translation2d(FrontLeft.LocationX, FrontLeft.LocationY).getNorm(),
                         new ReplanningConfig());
 
-        public static final CommandSwerveDrivetrain DriveTrain = new CommandSwerveDrivetrain(DrivetrainConstants, 0,
+        public static final CommandSwerveDrivetrain DriveTrain = new CommandSwerveDrivetrain(DrivetrainConstants,
+                        kAutonomousMaxSpeedMps,
                         HoloConfig,
                         FrontLeft,
                         FrontRight, BackLeft, BackRight);
